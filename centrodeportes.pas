@@ -25,7 +25,9 @@ type
     dato: cliente;
     sig: lista;
 
-  Vsub= array[sub] of integer;
+  Vsub= array[sub] of real;
+  Vsuscripciones= array[sub]of integer;
+
 
 procedure leerJugador(var c: cliente);
 begin
@@ -53,6 +55,26 @@ begin
   L:= nue;
 end;
 
+procedure insertarOrdenado(var L:lista; c: cliente);
+var 
+  nue: lista;
+  act, ant: lista; {punteros recorrido}
+begin
+  new(nue);
+  nue^.dato := c;
+  act:= L; {los dos punteros al inicio de la lista}
+  ant:= L;
+  while(act<> nil)and(c.dni< act^.dato.altura)do begin
+    ant:= act;
+    act:= act^.sig;
+  end;
+  if(act= ant) then {si esta al inicio o la lista esta vacia}
+    L:=nue;
+  else {si estamos en el medio o el final de la lista}
+    ant^.sig:=nue;
+  nue^.sig:= act;    
+end;
+
 procedure cargarLista(var L: lista);
 var
   c: cliente;
@@ -78,32 +100,66 @@ var
   ganancia: real;
 begin
   ganancia:= 0;
-  while(L<> nil) do begin
-    ganancia:= ganancia + vector[L.cliente.tipo_sub];
-    L:= L^sig;
+  ganancia:= ganancia + vector[L.cliente.tipo_sub];
+  L:= L^sig;
   end;
   gananciatotal:= ganancia;
+end;
+
+procedure maximo(vector: Vsuscripciones);
+var
+i: integer;
+maxsub1, maxsub2, max1, max2: integer;
+begin
+  maxsub1, maxsub2, max1, max2:= 0;
+  for i:= 1 to 4 do begin
+    if(vector[i]>max1) then begin
+      max2:= max1;
+      maxsub2:= maxsub1;
+      max1:=vector[i];
+      maxsub1:= i;
+    end;
+    else
+      if(vector[i]>max2)then begin
+      max2:= vector[i];
+      maxsub2:= i;
+    end;
+  whiteLN('las 2 suscripciones con mas clientes son:', maxsub1, maxsub2);
+end;
+        
+procedure actualizarvector(var vector: Vsuscripciones; suscripcion: integer);
+begin
+  vector[suscripcion]:= vector[suscripcion]+1;
+end;
+    
 end;
 function cumple(cli: cliente): boolean;
 begin
   cumple:=(cliente.edad > 40) and (cliente.tipo_sub = 3) and (cliente.tipo_sub= 1,2,3,4);
 
-procedure mas40(var Lordenada: lista; L:lista);
+procedure mas40(var Lordenada: lista; L:lista; C: cliente);
 begin
   Lordenada:= nil;
-  if (cumple)
+  if (cumple(cliente));
+    insertarOrdenado(Lordenada,L^.dato);
+  end
+end;
+
 
 
 var
   L, mas40: lista;
   V : Vsub;
-
+  VS : Vsuscripciones;
 
 begin
   L:= nil;
   cargarLista(L);
   cargarVector(V);
-  writeln('La ganancia total de Fortaco’s es ' , gananciatotal);
-  writeln('Las 2 suscripciones con más clientes es ', mas1, mas2);
-
+  inicializarVector(VS);
+  while(L<>nil)
+    writeln('La ganancia total de Fortaco’s es ' , gananciatotal);
+    writeln('Las 2 suscripciones con más clientes es ', maximo);
+  end;
+end;   
 end; 
